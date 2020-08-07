@@ -21,7 +21,7 @@ json_data <- fromJSON(file=json_file)
 result <- c()
 rel_path <- c()
 
-tags <- c("Children's stories", "Children's literature", "Juvenile")
+tags <- c("Children's stories", "Children's literature")#"Juvenile"
 
 for(i in json_data)
 {
@@ -37,7 +37,7 @@ for(i in json_data)
   }
 }
 
-result <- unique(result)
+result <- unique(result) #There seems to be duplicate 'character(0)' entries
 rel_path <- unique(rel_path)
 
 dir.create("Books")
@@ -45,4 +45,3 @@ for(path in rel_path)
 {
   file.copy(path, "Books")
 }
-
