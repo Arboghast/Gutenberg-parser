@@ -66,19 +66,10 @@ for(i in 1:4){
     anote <- annotate(split3[i],sent_token_annotator)
     text <- as.String(split3[i])
     split <- text[anote]
-    if(length(split) > 4){
+    if(length(split) > 1){
       temp <- list()
-      temp2 <- c()
       for(j in 1:length(split)){
-        temp2 <- c(temp2, split[j])
-        if(j %% 4 == 0)
-        {
-          temp[[length(temp)+1]] <- temp2
-          temp2 <- c()
-        }
-      }
-      if(length(temp2) == 0)
-      {
+        temp2 <- c(split[j])
         temp[[length(temp)+1]] <- temp2
       }
       
