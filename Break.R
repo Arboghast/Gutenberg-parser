@@ -11,10 +11,11 @@ library(openNLPmodels.en)
 list.of.packages <- c("NLP", "openNLP", "SnowballC")
 
 ## Returns a not installed packages list
-new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
+new.packages <-
+  list.of.packages[!(list.of.packages %in% installed.packages()[, "Package"])]
 
 ## Installs new packages
-if(length(new.packages)) 
+if (length(new.packages))
   install.packages(new.packages)
 
 library(NLP)
@@ -23,11 +24,17 @@ library(SnowballC)
 
 
 
-filenames <- c("A1.txt","A2.txt","A3.txt","A4.txt")
+filenames <- c("A1.txt", "A2.txt", "A3.txt", "A4.txt")
 
-titles <- c("The Cash Boy", "Aladdin and the Magic Lamp", "Alice's Adventures in Wonderland", "The Book of DRAGONS")
+titles <-
+  c(
+    "The Cash Boy",
+    "Aladdin and the Magic Lamp",
+    "Alice's Adventures in Wonderland",
+    "The Book of DRAGONS"
+  )
 
-ids <- c("296","57","19033","23661")
+ids <- c("296", "57", "19033", "23661")
 
 #example_text <- paste0("The Boy lives in Miami and studies in the St. Martin School. ","The boy has a heiht of 5.7 and weights 60 Kg's. ", "He has intrest in the Arts and crafts; and plays basketball. ")
 
@@ -38,19 +45,22 @@ sent_token_annotator <- Maxent_Sent_Token_Annotator()
 splited_text <- example_text[annotation]
 
 master <- list()
-df <- data.frame(ID = numeric(4), Title= character(4), Text = I(list(1:4,1:2,1:1,1:3)))
+df <-
+  data.frame(ID = numeric(4),
+             Title = character(4),
+             Text = I(list(1:4, 1:2, 1:1, 1:3)))
 
-for(i in 1:4){
+for (i in 1:4) {
   Rstring <- read_file(filenames[i])
   
   #split by new line breaks
-  split2 <- unlist(str_split(Rstring,"\\r\\r\\n\\r\\r\\n"))
+  split2 <- unlist(str_split(Rstring, "\\r\\r\\n\\r\\r\\n"))
   
   #convert unicode tag to quotes
   split2 <- str_replace_all(split2, "\uFFFD", '"')
   
   #convert back to spaces
-  split2 <- str_replace_all(split2,"\\r\\r\\n", " ")
+  split2 <- str_replace_all(split2, "\\r\\r\\n", " ")
   
   split2 <- str_replace_all(split2, "\\[.+\\]", "")
   
@@ -62,34 +72,40 @@ for(i in 1:4){
   
   split3 <- as.list(split2)
   split4 <- list()
-  for(i in 1:length(split3)){
-    anote <- annotate(split3[i],sent_token_annotator)
-    text <- as.String(split3[i])
+  for (j in 1:length(split3)) {
+    anote <- annotate(split3[j], sent_token_annotator)
+    text <- as.String(split3[j])
     split <- text[anote]
-    if(length(split) > 1){
+    if (length(split) >= 1) {
       temp <- list()
-      for(j in 1:length(split)){
-        temp2 <- c(split[j])
-        temp[[length(temp)+1]] <- temp2
+      temp2 <- c()
+      counter <- 0
+      for (k in 1:length(split)) {
+        if (k > 1) {
+          if (counter + str_count(split[[k]], "\\w") > 160) {
+            #print(counter)
+            temp[[length(temp) + 1]] <- temp2
+            temp2 <- c()
+            counter <- 0
+          }
+        }
+        temp2 <- c(temp2, split[[k]])
+        counter <- counter + str_count(split[[k]], "\\w")
       }
       
-      for(k in 1:length(temp))
-      {
-        if(length(temp[[k]]) != 0)
-        {
-          split4[[length(split4)+1]] <- temp[[k]]
+      if (length(temp2) != 0) {
+        temp[[length(temp) + 1]] <- temp2
+      }
+      
+      for (k in 1:length(temp)) {
+        if (length(temp[[k]]) != 0) {
+          split4[[length(split4) + 1]] <- temp[[k]]
         }
       }
       
     }
-    else{
-      if(length(split) != 0)
-      {
-        split4[[length(split4)+1]] <- split
-      }
-    }
   }
-  master[[length(master)+1]] <- split4
+  master[[length(master) + 1]] <- split4
 }
 
 df$ID <- as.numeric(ids)
@@ -98,4 +114,3 @@ df$Text <- I(master)
 
 json <- to_json(df)
 write(json, "test.json")
-
