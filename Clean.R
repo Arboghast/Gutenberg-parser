@@ -11,7 +11,7 @@ titles <- c("The Cash Boy", "Aladdin and the Magic Lamp", "Alice's Adventures in
 
 ids <- c("296","57","19033","23661")
 
-newName <- c("1.txt","2.txt","3.txt","4.txt")
+newName <- c("A1.txt","A2.txt","A3.txt","A4.txt")
 
 helper <- function(x){
   roman <- as.roman(x);

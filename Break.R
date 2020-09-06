@@ -5,7 +5,7 @@ library(sjmisc)
 library(stringr)
 library(stringi)
 require("NLP")
-require("'openNLPmodels.en")
+require("openNLPmodels.en")
 library(openNLPmodels.en)
 
 list.of.packages <- c("NLP", "openNLP", "SnowballC")
@@ -62,6 +62,7 @@ for (i in 1:4) {
   #convert back to spaces
   split2 <- str_replace_all(split2, "\\r\\r\\n", " ")
   
+  #niche character filtering
   split2 <- str_replace_all(split2, "\\[.+\\]", "")
   
   split2 <- str_replace_all(split2, "\\*+", "")
@@ -74,16 +75,17 @@ for (i in 1:4) {
   split4 <- list()
   for (j in 1:length(split3)) {
     anote <- annotate(split3[j], sent_token_annotator)
-    text <- as.String(split3[j])
-    split <- text[anote]
-    if (length(split) >= 1) {
+    text <- as.String(split3[j]) 
+    split <- text[anote] #tokenized string
+    if (length(split) >= 1) { #string exists
       temp <- list()
       temp2 <- c()
       counter <- 0
+      #combine sentences into chunks of 160 characters
       for (k in 1:length(split)) {
         if (k > 1) {
           if (counter + str_count(split[[k]], "\\w") > 160) {
-            #print(counter)
+            print(counter)
             temp[[length(temp) + 1]] <- temp2
             temp2 <- c()
             counter <- 0
@@ -97,7 +99,7 @@ for (i in 1:4) {
         temp[[length(temp) + 1]] <- temp2
       }
       
-      for (k in 1:length(temp)) {
+      for (k in 1:length(temp)) {#add to master array
         if (length(temp[[k]]) != 0) {
           split4[[length(split4) + 1]] <- temp[[k]]
         }
