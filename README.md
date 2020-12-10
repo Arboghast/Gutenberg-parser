@@ -8,6 +8,8 @@ or obtain .txt files from the website
 
 2: Place .txt files in the same directory as R files
 
-3: Rename and tweak filename code in both Break.R and Clean.R
+3: Rename and tweak filename code in both Break.R and Clean.R (TODO: automate this process)
 
 4: Run Clean.R first, then Break.R
+
+5: Resulting JSON file should have a simillar structure as this: https://github.com/Arboghast/Gutenberg-parser/blob/master/reformattedX.json
