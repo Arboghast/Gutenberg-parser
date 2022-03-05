@@ -13,5 +13,5 @@ Steps to replicate:
 
 5: Resulting JSON file should have a simillar structure to this: https://github.com/Arboghast/Gutenberg-parser/blob/master/reformattedX.json
 
-References:
+dataset:
 http://static.decontextualize.com/gutenberg-dammit-files-v002.zip 
